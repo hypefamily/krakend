@@ -32,6 +32,22 @@ var _ = Describe("ApiEndpoints Controller", func() {
 
 	BeforeEach(func() {
 		Expect(k8sClient.Create(ctx, apiEndpointsDeps.krakend)).Should(Succeed())
+		k := &krakendv1.Krakend{}
+
+		Eventually(func() bool {
+			err := k8sClient.Get(ctx, client.ObjectKeyFromObject(apiEndpointsDeps.krakend), k)
+			return err == nil
+		}, timeout, interval).Should(BeTrue())
+
+		apiEndpointsDeps.cm.SetOwnerReferences([]metav1.OwnerReference{
+			{
+				APIVersion: "krakend.nais.io/v1",
+				Kind:       "Krakend",
+				Name:       k.Name,
+				UID:        k.UID,
+			},
+		})
+
 		Expect(k8sClient.Create(ctx, apiEndpointsDeps.cm)).Should(Succeed())
 	})
 
