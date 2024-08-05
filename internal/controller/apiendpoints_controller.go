@@ -353,7 +353,7 @@ func (r *ApiEndpointsReconciler) updateKrakendConfigMap(ctx context.Context, k *
 
 	err = r.setCmHashToDeploymentAnnotations(ctx, k, cmHash)
 	if err != nil {
-		return fmt.Errorf("rollout restart Deployment: %v", err)
+		return fmt.Errorf("set cm hash to Deployment annotations: %v", err)
 	}
 
 	return nil
@@ -366,8 +366,11 @@ func (r ApiEndpointsReconciler) setCmHashToDeploymentAnnotations(ctx context.Con
 		Name:      dName,
 		Namespace: k.Namespace,
 	}, d)
-	if err != nil {
+	if client.IgnoreNotFound(err) != nil {
 		return fmt.Errorf("get Deployment '%s': %v", dName, err)
+	}
+	if errors.IsNotFound(err) {
+		return nil
 	}
 
 	annotations := d.GetAnnotations()
