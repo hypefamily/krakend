@@ -20,7 +20,8 @@ type Endpoint struct {
 	QueryParams []string `json:"queryParams,omitempty" fake:"{word}" fakesize:"1"`
 	// Timeout is the timeout for the whole duration of the request/response pipe, see https://www.krakend.io/docs/endpoints/#timeout
 	// Valid duration units are: ns (nanosec.), us or µs (microsec.), ms (millisec.), s (sec.), m (minutes), h (hours).
-	TimeOut string `json:"timeout,omitempty" fake:"10s"`
+	TimeOut   string     `json:"timeout,omitempty" fake:"10s"`
+	RateLimit *RateLimit `json:"rateLimit,omitempty"`
 }
 
 // RateLimit defines the rate limit configuration
