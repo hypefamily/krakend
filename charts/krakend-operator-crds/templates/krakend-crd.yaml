@@ -307,7 +307,18 @@ spec:
                                   ingress
                                 type: string
                             type: object
+                        type: array
+                      type: object
+                    type: array
+                  tls:
+                    items:
+                      properties:
+                        hosts:
+                          items:
+                            type: string
                           type: array
+                        secretName:
+                          type: string
                       type: object
                     type: array
                 type: object

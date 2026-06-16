@@ -21,6 +21,12 @@ func TestRenderChart(t *testing.T) {
 
 	values, err := prepareValues(k)
 	assert.NoError(t, err)
+	ingress := values["ingress"].(map[string]interface{})
+	tls := ingress["tls"].([]interface{})
+	assert.Len(t, tls, 1)
+	tlsEntry := tls[0].(map[string]interface{})
+	assert.Equal(t, "team1-tls", tlsEntry["secretName"])
+	assert.Equal(t, []interface{}{"team1.nais.io"}, tlsEntry["hosts"])
 
 	c, err := helm.LoadChart("testdata/krakend")
 	assert.NoError(t, err)

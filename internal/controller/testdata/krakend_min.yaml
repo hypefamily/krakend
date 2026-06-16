@@ -10,7 +10,20 @@ metadata:
   name: team1-min
 spec:
   name: team1-min
-  ingressHost: team1.nais.io
+  ingress:
+    enabled: true
+    className: nais-ingress
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-production-cf
+    hosts:
+      - host: team1.nais.io
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - secretName: team1-tls
+        hosts:
+          - team1.nais.io
   partialsConfigMap:
     name: cm-partials
     endpointsKey: endpoints.tmpl
@@ -28,6 +41,5 @@ spec:
               port: 9090
               process_metrics: true
               go_metricsL: true
-
 
 
