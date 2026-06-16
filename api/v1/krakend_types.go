@@ -56,7 +56,13 @@ type Ingress struct {
 	// Annotations is a list of annotations to add to the ingress
 	Annotations map[string]string `json:"annotations,omitempty"`
 	// Hosts is a list of hosts to add to the ingress
-	Hosts []Host `json:"hosts,omitempty"`
+	Hosts []Host       `json:"hosts,omitempty"`
+	TLS   []IngressTLS `json:"tls,omitempty"`
+}
+
+type IngressTLS struct {
+	SecretName string   `json:"secretName,omitempty"`
+	Hosts      []string `json:"hosts,omitempty"`
 }
 
 // Host defines the host configuration for an ingress

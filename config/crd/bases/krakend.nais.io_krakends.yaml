@@ -361,6 +361,17 @@ spec:
                           type: array
                       type: object
                     type: array
+                  tls:
+                    items:
+                      properties:
+                        hosts:
+                          items:
+                            type: string
+                          type: array
+                        secretName:
+                          type: string
+                      type: object
+                    type: array
                 type: object
               ingressHost:
                 description: IngressHost is a shortcut for creating a single host
