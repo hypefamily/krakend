@@ -1,4 +1,3 @@
-{{- if .Values.customCrds.monitoring }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -11,11 +10,12 @@ metadata:
   {{- include "krakend-operator.labels" . | nindent 4 }}
 spec:
   endpoints:
-    - path: /metrics
-      port: http
-      scheme: http
+  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    path: /metrics
+    port: https
+    scheme: https
+    tlsConfig:
+      insecureSkipVerify: true
   selector:
     matchLabels:
       control-plane: controller-manager
-      {{- include "krakend-operator.selectorLabels" . | nindent 6 }}
-{{- end}}

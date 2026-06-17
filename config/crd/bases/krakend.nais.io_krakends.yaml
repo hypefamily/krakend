@@ -361,6 +361,21 @@ spec:
                           type: array
                       type: object
                     type: array
+                  tls:
+                    items:
+                      properties:
+                        hosts:
+                          description: Hosts is a list of hostnames that match this
+                            secret
+                          items:
+                            type: string
+                          type: array
+                        secretName:
+                          description: SecretName is the name of the secret to use
+                            for TLS
+                          type: string
+                      type: object
+                    type: array
                 type: object
               ingressHost:
                 description: IngressHost is a shortcut for creating a single host

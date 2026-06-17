@@ -1,29 +1,6 @@
-apiserverIP:
-
-replicator:
-  krakend:
-    webproxy: false
-    ingressDomain: external.dev.dev-nais.cloud.nais.io
-    ingressClassName: nais-ingress-external
-    # only relevant for use with github.com/nais/replicator in NAV
-    maskinporten:
-      jwkUrl: "https://test.maskinporten.no/jwk"
-      issuer: "https://test.maskinporten.no/"
-    # only relevant for use with github.com/nais/replicator in NAV
-    azuread:
-      jwkUrl: https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/discovery/v2.0/keys
-      issuer: https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/v2.0
-
-customCrds:
-  monitoring: true
-  certmanager: true
-  replicator: false
-
 controllerManager:
   manager:
     args:
-    - --health-probe-bind-address=:8081
-    - --metrics-bind-address=:8080
     - --leader-elect
     containerSecurityContext:
       allowPrivilegeEscalation: false
@@ -39,22 +16,26 @@ controllerManager:
       krakendChartPath: /var/config/krakendinstaller-1.0.0.tgz
       netpolEnabled: "true"
     image:
-      repository: ghcr.io/hypefamily/krakend/krakend-operator-image
+      repository: ghcr.io/hypefamily/krakend/krakend-operator
       tag: latest
     resources:
       requests:
         cpu: 100m
         memory: 256Mi
+  podSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
   replicas: 1
   serviceAccount:
     annotations: {}
 kubernetesClusterDomain: cluster.local
 metricsService:
   ports:
-  - name: http
-    port: 8080
+  - name: https
+    port: 8443
     protocol: TCP
-    targetPort: http
+    targetPort: https
   type: ClusterIP
 webhookService:
   ports:
