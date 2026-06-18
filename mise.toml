@@ -1,5 +1,5 @@
 [env]
-IMG = "europe-north1-docker.pkg.dev/nais-io/nais/images/krakend-operator:latest"
+IMG = "ghcr.io/hypefamily/krakend/krakend-operator:latest"
 ENVTEST_K8S_VERSION = "1.33.0"
 CONTAINER_TOOL = "docker"
 LOCALBIN = "{{config_root}}/bin"
@@ -102,10 +102,3 @@ run = "go run golang.org/x/vuln/cmd/govulncheck@latest ./..."
 [tasks.check]
 description = "Run lint and vulncheck"
 depends = ["lint", "vulncheck"]
-
-
-
-
-
-
-

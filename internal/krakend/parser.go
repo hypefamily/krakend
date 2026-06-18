@@ -3,6 +3,7 @@ package krakend
 import (
 	"encoding/json"
 	"fmt"
+
 	v1 "github.com/nais/krakend/api/v1"
 )
 
@@ -80,13 +81,21 @@ func parseKrakendEndpointsSpec(k *v1.Krakend, spec v1.ApiEndpointsSpec) ([]*Endp
 	for _, e := range spec.Endpoints {
 		endpoint := parseEndpoint(e)
 		endpoint.ExtraConfig.AuthValidator = auth
-		endpoint.ExtraConfig.QosRatelimitRouter = parseRateLimit(rateLimit)
+		if e.RateLimit != nil {
+			endpoint.ExtraConfig.QosRatelimitRouter = parseRateLimit(e.RateLimit)
+		} else {
+			endpoint.ExtraConfig.QosRatelimitRouter = parseRateLimit(rateLimit)
+		}
 		endpoints = append(endpoints, endpoint)
 	}
 	for _, e := range spec.OpenEndpoints {
 		endpoint := parseEndpoint(e)
 		endpoint.ExtraConfig = &ExtraConfig{}
-		endpoint.ExtraConfig.QosRatelimitRouter = parseRateLimit(rateLimit)
+		if e.RateLimit != nil {
+			endpoint.ExtraConfig.QosRatelimitRouter = parseRateLimit(e.RateLimit)
+		} else {
+			endpoint.ExtraConfig.QosRatelimitRouter = parseRateLimit(rateLimit)
+		}
 		endpoints = append(endpoints, endpoint)
 	}
 	return endpoints, nil

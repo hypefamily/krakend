@@ -108,6 +108,31 @@ spec:
                       items:
                         type: string
                       type: array
+                    rateLimit:
+                      description: RateLimit defines the rate limit configuration
+                      properties:
+                        capacity:
+                          description: 'Capacity is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: integer
+                        clientCapacity:
+                          description: 'ClientCapacity is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: integer
+                        clientMaxRate:
+                          description: 'ClientMaxRate is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: integer
+                        every:
+                          description: 'Every is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: string
+                        key:
+                          description: 'Key is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: string
+                        maxRate:
+                          description: 'MaxRate is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: integer
+                        strategy:
+                          description: 'Strategy is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: string
+                      type: object
                     timeout:
                       description: |-
                         Timeout is the timeout for the whole duration of the request/response pipe, see https://www.krakend.io/docs/endpoints/#timeout
@@ -152,6 +177,31 @@ spec:
                       items:
                         type: string
                       type: array
+                    rateLimit:
+                      description: RateLimit defines the rate limit configuration
+                      properties:
+                        capacity:
+                          description: 'Capacity is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: integer
+                        clientCapacity:
+                          description: 'ClientCapacity is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: integer
+                        clientMaxRate:
+                          description: 'ClientMaxRate is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: integer
+                        every:
+                          description: 'Every is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: string
+                        key:
+                          description: 'Key is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: string
+                        maxRate:
+                          description: 'MaxRate is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: integer
+                        strategy:
+                          description: 'Strategy is documented here: https://www.krakend.io/docs/endpoints/rate-limit/#configuration'
+                          type: string
+                      type: object
                     timeout:
                       description: |-
                         Timeout is the timeout for the whole duration of the request/response pipe, see https://www.krakend.io/docs/endpoints/#timeout

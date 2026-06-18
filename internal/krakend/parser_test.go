@@ -2,11 +2,12 @@ package krakend
 
 import (
 	"encoding/json"
+	"os"
+	"testing"
+
 	v1 "github.com/nais/krakend/api/v1"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/apimachinery/pkg/util/yaml"
-	"os"
-	"testing"
 )
 
 // TODO: add testcases
@@ -75,4 +76,75 @@ func TestParsePartials(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, 2, len(partials.Endpoints))
+}
+
+func TestParseKrakendEndpointsSpec_RateLimits(t *testing.T) {
+	spec := v1.ApiEndpointsSpec{
+		AppName: "test-krakend-whois",
+		Krakend: "api-gw",
+		Auth: v1.Auth{
+			Name:     "some-jwt-auth-provider",
+			Cache:    true,
+			Debug:    true,
+			Audience: []string{"audience1"},
+			Scope:    []string{"scope1"},
+		},
+		RateLimit: &v1.RateLimit{
+			MaxRate:        1111,
+			ClientMaxRate:  0,
+			Strategy:       "ip",
+			Capacity:       0,
+			ClientCapacity: 0,
+		},
+		OpenEndpoints: []v1.Endpoint{
+			{
+				Path:        "/",
+				Method:      "GET",
+				BackendHost: "http://test-krakend-whoami",
+				BackendPath: "/",
+				RateLimit: &v1.RateLimit{
+					MaxRate:        9999,
+					ClientMaxRate:  0,
+					Strategy:       "ip",
+					Capacity:       0,
+					ClientCapacity: 0,
+				},
+			},
+			{
+				Path:        "/test-no-rate-limits",
+				Method:      "GET",
+				BackendHost: "http://test-krakend-whoami",
+				BackendPath: "/",
+			},
+		},
+	}
+
+	k := &v1.Krakend{
+		Spec: v1.KrakendSpec{
+			AuthProviders: []v1.AuthProvider{
+				{
+					Name:   "some-jwt-auth-provider",
+					Alg:    "RS256",
+					JwkUrl: "https://mock-jwk-url",
+					Issuer: "https://mock-issuer",
+				},
+			},
+		},
+	}
+
+	endpoints, err := parseKrakendEndpointsSpec(k, spec)
+	assert.NoError(t, err)
+	assert.Len(t, endpoints, 2)
+
+	assert.Equal(t, "/", endpoints[0].Endpoint)
+	assert.NotNil(t, endpoints[0].ExtraConfig)
+	assert.NotNil(t, endpoints[0].ExtraConfig.QosRatelimitRouter)
+	assert.Equal(t, 9999, endpoints[0].ExtraConfig.QosRatelimitRouter.MaxRate)
+	assert.Equal(t, "ip", endpoints[0].ExtraConfig.QosRatelimitRouter.Strategy)
+
+	assert.Equal(t, "/test-no-rate-limits", endpoints[1].Endpoint)
+	assert.NotNil(t, endpoints[1].ExtraConfig)
+	assert.NotNil(t, endpoints[1].ExtraConfig.QosRatelimitRouter)
+	assert.Equal(t, 1111, endpoints[1].ExtraConfig.QosRatelimitRouter.MaxRate)
+	assert.Equal(t, "ip", endpoints[1].ExtraConfig.QosRatelimitRouter.Strategy)
 }

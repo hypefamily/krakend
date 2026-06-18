@@ -68,52 +68,52 @@ spec:
         # seccompProfile:
         #   type: RuntimeDefault
       containers:
-      - command:
-        - /manager
-        args:
-        - --leader-elect
-        image: controller:latest
-        name: manager
-        env:
-          - name: KRAKEND_CHART_PATH
-            value: "/var/config/krakendinstaller-1.0.0.tgz"
-          - name: NETPOL_ENABLED
-            value: "true"
-          - name: DEBUG
-            value: "false"
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - "ALL"
-          readOnlyRootFilesystem: true
-          runAsGroup: 65532
-          runAsNonRoot: true
-          runAsUser: 65532
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 8081
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: 8081
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        # TODO(user): Configure the resources accordingly based on the project requirements.
-        # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-        resources:
-          requests:
-            cpu: 100m
-            memory: 256Mi
-        volumeMounts:
-          - mountPath: /var/config
-            name: config
+        - command:
+            - /manager
+          args:
+            - --leader-elect
+          image: controller:latest
+          name: manager
+          env:
+            - name: KRAKEND_CHART_PATH
+              value: "/var/config/krakendinstaller-1.0.0.tgz"
+            - name: NETPOL_ENABLED
+              value: "true"
+            - name: DEBUG
+              value: "false"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - "ALL"
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          # TODO(user): Configure the resources accordingly based on the project requirements.
+          # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /var/config
+              name: config
       volumes:
         - name: config
           configMap:
-            name: config
+            name: krakend-operator-config
       serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10
